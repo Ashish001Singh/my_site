@@ -396,102 +396,111 @@
             the pull request in Bitbucket, via MCP, for human review.
           </p>
 
-          <svg class="arch-diagram" viewBox="0 0 1120 380" role="img" aria-labelledby="orch-title orch-desc">
-            <title id="orch-title">Multi-agent dev pipeline, ticket to pull request</title>
-            <desc id="orch-desc">A Jira ticket and developer notes go to an orchestrator, which dispatches an analysis agent. The analysis agent chunks the work and the orchestrator spins up an individual dev agent per chunk, run in parallel or serial. An optional Playwright test agent loops failures back to the dev agents. All chunks converge on an architect agent that reviews changes against memory-file rules and can send work back for revision. A PR agent then commits and opens the pull request in Bitbucket for human review.</desc>
+          <svg class="arch-diagram" viewBox="0 0 1220 260" role="img" aria-labelledby="orch-title orch-desc">
+            <title id="orch-title">Multi-agent dev pipeline, routed entirely through the orchestrator</title>
+            <desc id="orch-desc">A Jira ticket goes to an orchestrator agent, the brain of the pipeline. Every other agent — analysis, one dev agent per chunk run in parallel or serial, an optional Playwright test agent, an architect review agent, and a PR agent — reports its findings back to the orchestrator rather than to each other, and the orchestrator alone decides which agent runs next. The PR agent's output goes to a human reviewer in Bitbucket.</desc>
             <defs>
               <linearGradient id="orchGrad" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stop-color="var(--accent-1)" />
                 <stop offset="1" stop-color="var(--accent-2)" />
               </linearGradient>
-              <marker id="orchArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <marker id="orchArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M0,0 L10,5 L0,10 z" fill="var(--text-dim)" />
+              </marker>
+              <marker id="orchArrowHub" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-2)" />
               </marker>
             </defs>
 
-            <!-- main chain -->
-            <path d="M140,150 L173,150" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#orchArrow)" />
-            <path d="M285,150 L318,150" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#orchArrow)" />
+            <!-- hub -->
+            <rect x="507" y="10" width="180" height="44" rx="10" fill="var(--bg-elev)" stroke="var(--accent-2)" stroke-width="1.8" />
+            <text x="597" y="37" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700">Orchestrator</text>
+            <path d="M597,54 L597,92" fill="none" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#orchArrowHub)" />
+            <text x="597" y="70" text-anchor="middle" fill="var(--text-dim)" font-size="9" font-family="var(--mono)">every finding routes here</text>
 
-            <!-- analysis fans out to three dev-agent chunks -->
-            <path d="M470,140 C495,110 495,80 508,68" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
-            <path d="M470,150 L508,170" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
-            <path d="M470,160 C495,200 495,258 508,270" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
+            <!-- bus: every agent connects only to this line, never to each other -->
+            <line x1="30" y1="94" x2="1190" y2="94" stroke="var(--accent-2)" stroke-width="1.2" opacity="0.55" />
 
-            <!-- dev-agent chunks converge on architect review -->
-            <path d="M660,68 C690,90 690,120 706,138" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
-            <path d="M660,170 L706,155" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
-            <path d="M660,270 C690,235 690,178 706,160" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
+            <!-- Jira Ticket: one-way in -->
+            <path d="M97,130 L97,96" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
 
-            <path d="M860,150 L908,150" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#orchArrow)" />
-            <path d="M990,175 C990,200 990,205 990,228" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#orchArrow)" />
+            <!-- Analysis: two-way -->
+            <path d="M236,130 L236,96" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M244,96 L244,130" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
 
-            <!-- test-agent branch (opt-in, dashed) — sampled off the chunk-2 dev agent -->
-            <path d="M585,193 L585,318" fill="none" stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#orchArrow)" />
-            <path d="M545,320 C500,320 500,210 543,193" fill="none" stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#orchArrow)" />
-            <text x="470" y="258" text-anchor="middle" fill="var(--text-dim)" font-size="9.5" font-family="var(--mono)">fail → fix</text>
-            <path d="M660,335 C740,335 740,220 712,178" fill="none" stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#orchArrow)" />
-            <text x="742" y="270" text-anchor="middle" fill="var(--text-dim)" font-size="9.5" font-family="var(--mono)">pass</text>
+            <!-- Dev agents: two-way each -->
+            <path d="M378,130 L378,96" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M386,96 L386,130" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M508,130 L508,96" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M516,96 L516,130" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M638,130 L638,96" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M646,96 L646,130" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
 
-            <!-- architect revise loop -->
-            <path d="M785,125 C785,20 585,20 585,65" fill="none" stroke="var(--text-dim)" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#orchArrow)" />
-            <text x="685" y="16" text-anchor="middle" fill="var(--text-dim)" font-size="10" font-family="var(--mono)">revise if rules fail</text>
+            <!-- Test agent: two-way, dashed (opt-in) -->
+            <path d="M776,130 L776,96" fill="none" stroke="var(--text-dim)" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#orchArrow)" />
+            <path d="M784,96 L784,130" fill="none" stroke="var(--text-dim)" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#orchArrow)" />
+
+            <!-- Architect: two-way -->
+            <path d="M926,130 L926,96" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M934,96 L934,130" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+
+            <!-- PR agent: two-way -->
+            <path d="M1081,130 L1081,96" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+            <path d="M1089,96 L1089,130" fill="none" stroke="var(--text-dim)" stroke-width="1.2" marker-end="url(#orchArrow)" />
+
+            <!-- PR agent -> human review, one-way, not through the hub -->
+            <path d="M1085,180 L1085,204" fill="none" stroke="var(--text-dim)" stroke-width="1.3" marker-end="url(#orchArrow)" />
 
             <g>
-              <rect x="10" y="125" width="130" height="50" rx="10" fill="var(--bg-elev-2)" stroke="var(--border)" />
-              <text x="75" y="146" text-anchor="middle" fill="var(--text)" font-size="11" font-family="var(--mono)">Jira Ticket</text>
-              <text x="75" y="161" text-anchor="middle" fill="var(--text-dim)" font-size="9.5" font-family="var(--mono)">+ Notes · Jira MCP</text>
+              <rect x="40" y="130" width="115" height="50" rx="10" fill="var(--bg-elev-2)" stroke="var(--border)" />
+              <text x="97" y="151" text-anchor="middle" fill="var(--text)" font-size="11" font-family="var(--mono)">Jira Ticket</text>
+              <text x="97" y="166" text-anchor="middle" fill="var(--text-dim)" font-size="9" font-family="var(--mono)">+ Notes · Jira MCP</text>
             </g>
 
             <g>
-              <rect x="175" y="125" width="110" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-2)" stroke-width="1.5" />
-              <text x="230" y="155" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">Orchestrator</text>
+              <rect x="170" y="130" width="140" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.4" />
+              <text x="240" y="151" text-anchor="middle" fill="var(--text)" font-size="11.5" font-weight="600">Analysis Agent</text>
+              <text x="240" y="166" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">Opus · Figma MCP · chunks</text>
             </g>
 
             <g>
-              <rect x="320" y="125" width="150" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.5" />
-              <text x="395" y="146" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">Analysis Agent</text>
-              <text x="395" y="162" text-anchor="middle" fill="var(--text-muted)" font-size="10">Opus · Figma MCP · chunks</text>
+              <rect x="325" y="130" width="115" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.4" />
+              <text x="382" y="151" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">Dev Agent</text>
+              <text x="382" y="166" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">chunk 1</text>
+            </g>
+            <g>
+              <rect x="455" y="130" width="115" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.4" />
+              <text x="512" y="151" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">Dev Agent</text>
+              <text x="512" y="166" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">chunk 2</text>
+            </g>
+            <g>
+              <rect x="585" y="130" width="115" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.4" />
+              <text x="642" y="151" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">Dev Agent</text>
+              <text x="642" y="166" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">chunk 3</text>
+            </g>
+            <text x="512" y="197" text-anchor="middle" fill="var(--text-dim)" font-size="9" font-family="var(--mono)">parallel or serial, by dependency</text>
+
+            <g>
+              <rect x="715" y="130" width="130" height="50" rx="10" fill="var(--bg-elev-2)" stroke="var(--text-dim)" stroke-width="1.1" stroke-dasharray="4 3" />
+              <text x="780" y="151" text-anchor="middle" fill="var(--text-muted)" font-size="11" font-weight="600">Test Agent</text>
+              <text x="780" y="166" text-anchor="middle" fill="var(--text-dim)" font-size="9.5">Playwright · opt-in</text>
             </g>
 
             <g>
-              <rect x="510" y="45" width="150" height="46" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.3" />
-              <text x="585" y="64" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">Dev Agent</text>
-              <text x="585" y="79" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">chunk 1</text>
-            </g>
-            <g>
-              <rect x="510" y="147" width="150" height="46" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.3" />
-              <text x="585" y="166" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">Dev Agent</text>
-              <text x="585" y="181" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">chunk 2</text>
-            </g>
-            <g>
-              <rect x="510" y="249" width="150" height="46" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.3" />
-              <text x="585" y="268" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="600">Dev Agent</text>
-              <text x="585" y="283" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">chunk 3</text>
-            </g>
-            <text x="585" y="315" text-anchor="middle" fill="var(--text-dim)" font-size="9.5" font-family="var(--mono)">parallel or serial, by dependency</text>
-
-            <g>
-              <rect x="545" y="318" width="150" height="44" rx="10" fill="var(--bg-elev-2)" stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="4 3" />
-              <text x="620" y="336" text-anchor="middle" fill="var(--text-muted)" font-size="11" font-weight="600">Test Agent</text>
-              <text x="620" y="351" text-anchor="middle" fill="var(--text-dim)" font-size="9.5">Playwright · opt-in</text>
+              <rect x="860" y="130" width="140" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.4" />
+              <text x="930" y="151" text-anchor="middle" fill="var(--text)" font-size="11.5" font-weight="600">Architect Review</text>
+              <text x="930" y="166" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">memory-file rules</text>
             </g>
 
             <g>
-              <rect x="710" y="125" width="150" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-2)" stroke-width="1.5" />
-              <text x="785" y="146" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">Architect Review</text>
-              <text x="785" y="162" text-anchor="middle" fill="var(--text-muted)" font-size="10">memory-file rules</text>
+              <rect x="1015" y="130" width="140" height="50" rx="10" fill="none" stroke="url(#orchGrad)" stroke-width="1.6" />
+              <text x="1085" y="151" text-anchor="middle" fill="var(--text)" font-size="11.5" font-weight="600">PR Agent</text>
+              <text x="1085" y="166" text-anchor="middle" fill="var(--text-muted)" font-size="9.5">Bitbucket MCP · commit + PR</text>
             </g>
 
             <g>
-              <rect x="910" y="125" width="160" height="50" rx="10" fill="none" stroke="url(#orchGrad)" stroke-width="1.5" />
-              <text x="990" y="146" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">PR Agent</text>
-              <text x="990" y="162" text-anchor="middle" fill="var(--text-muted)" font-size="10">Bitbucket MCP · commit + PR</text>
-            </g>
-
-            <g>
-              <rect x="930" y="230" width="120" height="42" rx="10" fill="var(--bg-elev-2)" stroke="var(--border)" />
-              <text x="990" y="255" text-anchor="middle" fill="var(--text)" font-size="11" font-family="var(--mono)">Human Review</text>
+              <rect x="1020" y="206" width="130" height="42" rx="10" fill="var(--bg-elev-2)" stroke="var(--border)" />
+              <text x="1085" y="231" text-anchor="middle" fill="var(--text)" font-size="10.5" font-family="var(--mono)">Human Review</text>
             </g>
           </svg>
 
