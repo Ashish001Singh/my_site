@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Ashish Singh — Resume</title>
+<style>
+  @page { size: Letter; margin: 0.4in 0.6in; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    color: #1c1c22;
+    font-size: 9.8pt;
+    line-height: 1.32;
+    margin: 0;
+  }
+  .accent { color: #4f8a6d; }
+  header { text-align: center; margin-bottom: 10px; border-bottom: 3px solid #4f8a6d; padding-bottom: 8px; }
+  h1 { font-size: 21pt; margin: 0 0 3px; letter-spacing: 0.01em; color: #1c1c22; }
+  .role { font-size: 10.5pt; color: #4f8a6d; font-weight: 600; margin-bottom: 5px; }
+  .contact { font-size: 9pt; color: #444; }
+  .contact span { margin: 0 8px; }
+  h2 {
+    font-size: 11pt;
+    color: #4f8a6d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #cfd8d2;
+    padding-bottom: 2px;
+    margin: 10px 0 6px;
+  }
+  .summary { font-size: 9.5pt; }
+  .skills-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 24px; font-size: 9.3pt; }
+  .skills-cols div { margin-bottom: 1px; }
+  .job { margin-bottom: 8px; }
+  .job-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .job-title { font-weight: 700; font-size: 10pt; }
+  .job-date { font-size: 9pt; color: #555; white-space: nowrap; }
+  .job-company { color: #4f8a6d; font-style: italic; font-size: 9.3pt; margin-bottom: 2px; }
+  ul { margin: 2px 0 0; padding-left: 16px; }
+  li { margin-bottom: 1px; font-size: 9.3pt; }
+  .certs-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1px 24px; font-size: 9.3pt; }
+  .cert-featured { font-weight: 700; }
+  .edu { font-size: 9.3pt; margin-bottom: 4px; }
+  .edu-school { font-weight: 700; }
+  .edu-meta { color: #555; }
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>Ashish Singh</h1>
+    <div class="role">Salesforce Architect &middot; 8 Years &middot; 13 Certifications</div>
+    <div class="contact">
+      <span>Pune, India</span>&middot;
+      <span>+91 8617795125</span>&middot;
+      <span>ashish001.singh1997@gmail.com</span>&middot;
+      <span>ashish001singh.com</span>&middot;
+      <span>linkedin.com/in/ashish001-singh</span>
+    </div>
+  </header>
+
+  <h2>Summary</h2>
+  <p class="summary">
+    Certified Salesforce Architect with 8 years architecting customized CRM solutions,
+    streamlining workflows through Flow and Apex automation, and leading platform
+    migrations — including one that cut processing times by 40%. Skilled in Lightning
+    Web Components and Experience Cloud, with scalable portals and systems delivered for
+    global clients including Apple. Runs Agile projects end-to-end at 95% client
+    satisfaction. Currently building AI-powered developer tooling (ApexDebugger), applying
+    the same architectural judgment to code review automation.
+  </p>
+
+  <h2>Skills</h2>
+  <div class="skills-cols">
+    <div><strong>Core:</strong> Apex, Visualforce, LWC, Lightning Aura Components</div>
+    <div><strong>Data &amp; Events:</strong> SOQL, SOSL, Platform Events, CDC, Data Cloud</div>
+    <div><strong>Automation:</strong> Flow, Process Builder, Triggers, Batch/Queueable/Async Apex</div>
+    <div><strong>Clouds:</strong> Sales, Service, Experience, Manufacturing Cloud</div>
+    <div><strong>Integration:</strong> REST/SOAP APIs, MuleSoft, ETL Tools, External Services, OmniStudio</div>
+    <div><strong>Security:</strong> Sharing &amp; Visibility, Field-Level Security, OAuth, Territory Mgmt</div>
+    <div><strong>Agentforce &amp; AI:</strong> Agent Builder, Autonomous Agent Config, Atlas Reasoning</div>
+    <div><strong>Testing:</strong> JEST, Apex Testing, Reports &amp; Dashboards, Approval Process</div>
+  </div>
+
+  <h2>Work History</h2>
+
+  <div class="job">
+    <div class="job-head"><span class="job-title">Lead Technology</span><span class="job-date">Jun 2025 – Present</span></div>
+    <div class="job-company">Synechron Technologies &middot; Pune, India</div>
+    <ul>
+      <li>Led the effort to decommission a legacy managed package (T1Deco) and architected its in-house replacement — covering meeting notes, call reports, and opportunity and client sharing — eliminating a costly third-party dependency and saving the client millions of dollars.</li>
+      <li>Led a team to build a new Fund management application from the ground up, integrating Fund, Asset, Pricing, Performance, and Investor data from a third-party system through a data harmonization layer.</li>
+      <li>Designed floating notes that let bankers annotate Fund records without leaving their current page or workspace, and built the sync logic keeping internal and external Fund data consistent.</li>
+      <li>Built multi-source visualizations combining third-party and internal Fund data into graphs bankers use directly within their workspace.</li>
+      <li>Developed and maintained Salesforce Email Services that automated 500+ inbound requests monthly, reducing manual intervention by 40% and improving response time by 30%.</li>
+      <li>Drove efforts to achieve both short-term and long-term business goals by specifying optimal Salesforce technology solutions aligned with business needs and budget requirements.</li>
+      <li>Defined and communicated value propositions and technical requirements to stakeholders through clear documentation and impactful in-person presentations, ensuring alignment between business and technical teams.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="job-head"><span class="job-title">Technical Consultant</span><span class="job-date">Mar 2022 – Jun 2025</span></div>
+    <div class="job-company">Salesforce India Pvt. Ltd. (Apple) &middot; Pune, Maharashtra</div>
+    <ul>
+      <li>Migrated Opportunity Management from legacy CRM to Salesforce, reducing data processing time by 40% and boosting sales productivity by 25%.</li>
+      <li>Automated processes using Flows and Triggers, cutting manual tasks by 50% and improving user adoption by 30%.</li>
+      <li>Developed reusable Lightning Web Components (LWCs) with JEST testing, shortening development cycles by 20% for 70+ users.</li>
+      <li>Integrated Salesforce with Conga and Box using Change Data Capture and Platform Events, enhancing data sync efficiency by 60%.</li>
+      <li>Led POCs for Rebate Management and Data Processing Engines, identifying solutions that improved scalability by 15%.</li>
+      <li>Architected technical designs for Agile projects, ensuring zero-defect deliveries within 10% tighter timelines.</li>
+      <li>Delivered client training and demos on Sales Cloud and Einstein Analytics, increasing adoption rates by 35%.</li>
+      <li>Guided cross-functional teams as SME, resolving 95% of technical issues within 24 hours.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="job-head"><span class="job-title">System Engineer</span><span class="job-date">Feb 2021 – Feb 2022</span></div>
+    <div class="job-company">Great Software Laboratory &middot; Pune, Maharashtra</div>
+    <ul>
+      <li>Directed Experience Cloud projects, delivering tailored community portals for 10+ diverse clients.</li>
+      <li>Developed LWC-based portal for course admissions, streamlining payments and automating enrollment, saving 15 hours weekly.</li>
+      <li>Built Trailhead-inspired portal using LWCs and batch classes, improving badge sorting accuracy by 30% and user engagement by 40%.</li>
+      <li>Engineered case management portal with LWCs, automated notifications, and escalation rules, reducing case resolution time by 25%.</li>
+      <li>Implemented queueable classes for outbound communications, enhancing system efficiency by 20%.</li>
+      <li>Optimized portal performance with dynamic reporting, increasing client satisfaction by 35%.</li>
+      <li>Customized Service Console with macros, quick actions, and dynamic layouts, boosting agent productivity.</li>
+      <li>Integrated Knowledge Base and Chatbot for self-service support, reducing inbound case volume.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="job-head"><span class="job-title">System Engineer</span><span class="job-date">Jul 2018 – Feb 2021</span></div>
+    <div class="job-company">Tata Consultancy Services &middot; Mumbai, Maharashtra</div>
+    <ul>
+      <li>Built Loan Management System for diverse clients, streamlining loan processing for 10,000+ users.</li>
+      <li>Designed lead generation and approval workflows, reducing loan cycle time by 30%.</li>
+      <li>Automated disbursement and collection processes, improving financial operations efficiency by 25%.</li>
+      <li>Migrated large-scale data using PL/SQL, ensuring 100% data integrity for 5+ clients.</li>
+      <li>Optimized Siebel CRM performance by tuning queries, boosting system speed by 35%.</li>
+      <li>Integrated Siebel CRM with external systems via XML and EAI, enhancing data flow by 40%.</li>
+      <li>Collaborated with stakeholders to deliver tailored solutions, achieving 95% client satisfaction.</li>
+      <li>Provided ongoing support, resolving 90% of technical issues within 24 hours.</li>
+    </ul>
+  </div>
+
+  <h2>Education</h2>
+  <div class="edu">
+    <div class="edu-school">Academy of Technology, Kolkata, West Bengal</div>
+    <div class="edu-meta">Bachelor of Engineering (B.Tech) in Electronics and Communication &middot; May 2018 &middot; GPA 8.56</div>
+  </div>
+  <div class="edu">
+    <div class="edu-school">Hind Motor High School, Hind Motor, West Bengal</div>
+    <div class="edu-meta">Higher Secondary School Certificate in Science &middot; May 2014 &middot; GPA 72.2%</div>
+  </div>
+
+  <h2>Certifications</h2>
+  <div class="certs-cols">
+    <div class="cert-featured">Claude Certified Architect Foundation</div>
+    <div>Salesforce Certified Sharing &amp; Visibility Architect</div>
+    <div>Salesforce Certified AI Specialist</div>
+    <div>Salesforce Certified Experience Cloud Consultant</div>
+    <div>Salesforce Certified Sales Cloud Consultant</div>
+    <div>Salesforce Certified Service Cloud Consultant</div>
+    <div>Salesforce Certified Data Cloud Consultant</div>
+    <div>Salesforce Certified Platform Developer I</div>
+    <div>Salesforce Certified Platform Developer II</div>
+    <div>Salesforce Certified JavaScript Developer I</div>
+    <div>Salesforce Certified Platform App Builder</div>
+    <div>Salesforce Certified Administrator</div>
+    <div>Salesforce Certified Omni Studio Developer</div>
+  </div>
+
+</body>
+</html>
