@@ -296,7 +296,6 @@ h2.section-title {
 .timeline-meta .company { color: var(--accent-1); }
 .timeline-item ul { margin: 0; padding-left: 20px; color: var(--text-muted); }
 .timeline-item li { margin-bottom: 6px; }
-.timeline-item li.todo { color: var(--text-dim); font-style: italic; }
 
 /* ===== Projects ===== */
 .project-grid {
@@ -383,13 +382,6 @@ h2.section-title {
   color: #0a0a0f;
   font-weight: 700;
 }
-.cert-card.todo {
-  border-style: dashed;
-  color: var(--text-dim);
-  font-style: italic;
-}
-.cert-card.todo .cert-icon { background: var(--bg-elev-2); color: var(--text-dim); }
-
 /* ===== Contact ===== */
 .contact-inner { text-align: center; }
 .contact-inner p { color: var(--text-muted); max-width: 480px; margin: 0 auto 32px; }
