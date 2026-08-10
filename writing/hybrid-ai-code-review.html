@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Why I split code review into rules and judgment — Ashish Singh</title>
+<meta name="description" content="Why ApexDebugger uses a deterministic rules engine for what's certain and an LLM for what isn't — and how that split is enforced with a measured eval." />
+<link rel="canonical" href="https://ashish001singh.com/writing/hybrid-ai-code-review.html" />
+<meta name="theme-color" content="#0a0a0f" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="stylesheet" href="../styles.css" />
+
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashish001singh.com/writing/hybrid-ai-code-review.html" />
+<meta property="og:title" content="Why I split code review into rules and judgment" />
+<meta property="og:description" content="Why ApexDebugger uses a deterministic rules engine for what's certain and an LLM for what isn't — and how that split is enforced with a measured eval." />
+<meta property="og:image" content="https://ashish001singh.com/assets/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">AS</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#writing">Writing</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <section class="writing-post">
+    <div class="container reveal">
+      <p class="eyebrow">Writing · From building ApexDebugger</p>
+      <h1 class="section-title">Why I split code review into deterministic rules and LLM judgment</h1>
+      <p class="post-meta">Ashish Singh</p>
+
+      <div class="post-body">
+        <p>
+          Most AI code reviewers work the same way: point an LLM at a diff, ask it to
+          flag problems, ship the output. It looks impressive in a demo and falls apart
+          the moment you rely on it — because the model's confidence doesn't track its
+          correctness. It'll miss an obvious governor-limit bug in a loop and then
+          confidently invent a problem that isn't there, with the same tone either way.
+        </p>
+        <p>
+          When I built <strong>ApexDebugger</strong>, a reviewer for Salesforce Apex and
+          Lightning Web Components, I didn't want a tool that "usually" catches the bugs
+          that matter. So the design starts from one rule:
+        </p>
+        <p><strong>Bounded-and-decidable → code. Unbounded-judgment → LLM.</strong></p>
+        <p>
+          If a check has a yes/no answer that a human could verify by inspection —
+          SOQL or DML sitting inside a loop, a hardcoded record ID, a missing
+          <code>WITH SECURITY_ENFORCED</code> or sharing declaration — it doesn't belong
+          in a model call. It belongs in a regex or an AST check that returns the same
+          answer every time, for free, with 100% recall on what it's built to catch.
+          That's the deterministic layer.
+        </p>
+        <p>
+          Everything else — is this method doing too much, is this exception handling
+          actually risky, is this the third near-duplicate of the same helper — doesn't
+          have a bright-line answer. That's a judgment call, the same kind a senior
+          reviewer makes by reading the code and thinking about intent. That's where the
+          LLM reasoning layer earns its keep, running through LangGraph with structured
+          output against a shared rule taxonomy.
+        </p>
+        <p>
+          The objective checks live in the certain layer. The judgment calls go to the
+          layer built to make judgment calls. Neither one is asked to do the other's job.
+        </p>
+
+        <h2>Making the LLM layer honest</h2>
+        <p>
+          A hybrid system is only as good as its weakest layer, and LLMs hallucinate. So
+          most of the actual engineering here isn't the review logic — it's constraining
+          the model layer until its mistakes become measurable and rare:
+        </p>
+        <ul>
+          <li>
+            <strong>Blind independent review.</strong> The LLM never sees the
+            deterministic layer's findings before it reviews. No anchoring — it's a
+            genuine second opinion, not a rubber stamp on rules already found.
+          </li>
+          <li>
+            <strong>Consensus voting.</strong> Every LLM finding runs three independent
+            times; only findings that show up in at least two of three survive. Random
+            hallucinations flicker between runs. Real findings hold steady — this
+            collapsed run-to-run variance to close to zero on most of the golden set.
+          </li>
+          <li>
+            <strong>Regex authority.</strong> For any rule type the deterministic layer
+            owns, its verdict is final — an LLM claim on that same rule gets dropped.
+            This kills the hallucinations that voting can't: the ones that are wrong but
+            <em>consistently</em> wrong.
+          </li>
+          <li>
+            <strong>Controlled vocabulary.</strong> Both layers speak through the same
+            <code>RuleId</code> enum, so every finding is dedupable and scoreable instead
+            of being two systems producing free-text that has to be reconciled by hand.
+          </li>
+        </ul>
+
+        <h2>The eval is the actual product</h2>
+        <p>
+          None of that is worth anything without a way to check it's true. Every rule
+          type is scored against a hand-labeled golden set — review judgment frozen into
+          data instead of left as a vibe. There are two gates:
+        </p>
+        <ul>
+          <li>
+            A <strong>deterministic gate</strong> that runs the regex layer against the
+            golden labels — free, reproducible, runs in CI on every PR. It currently sits
+            at 17 of 17 golden cases at 1.00 precision and recall.
+          </li>
+          <li>
+            A <strong>probabilistic eval</strong> that runs the full pipeline multiple
+            times per case and reports mean F1 <em>and spread</em>. Spread turns out to be
+            a useful diagnostic on its own: low spread with a low score means a
+            deterministic bug — fix the code. High spread means LLM noise — fix the
+            prompt. Same failing score, different fix, and the spread number is what
+            tells you which one you're looking at.
+          </li>
+        </ul>
+        <p>
+          I also A/B tested grounding the LLM in general Salesforce best-practice docs
+          versus not. Zero measurable lift — the model already knows generic best
+          practice. So grounding effort now goes where the model actually has a gap:
+          project- and org-specific conventions it has no way to know on its own.
+        </p>
+
+        <h2>What this costs, measured</h2>
+        <p>
+          Because only the LLM layer costs money, the whole thing is cheap to run on
+          every push: roughly <strong>$0.0035 per pull request</strong>, measured rather
+          than estimated. A two-file PR runs about ten model calls — Apex reasoning with
+          three-way voting, LWC reasoning with three-way voting, cross-file reasoning
+          with three-way voting, plus one rollup summary — on the order of 16.8K tokens.
+          The deterministic layer and the CI gate cost nothing at all.
+        </p>
+
+        <h2>Why this matters beyond one tool</h2>
+        <p>
+          I spent eight years as a Salesforce architect doing the review work this tool
+          now automates — reading Apex for governor-limit risk, checking sharing and
+          field-level security, chasing down the same class of bug across a hundred pull
+          requests. Encoding that judgment into something measurable, instead of
+          something that just <em>sounds</em> right, is the actual engineering problem.
+          The AI part is the easy half.
+        </p>
+
+        <p>
+          <a class="project-link" href="https://github.com/Ashish001Singh/ApexDebugger" target="_blank" rel="noopener">View ApexDebugger on GitHub →</a>
+        </p>
+      </div>
+
+      <a class="project-link post-back" href="../index.html#writing">← Back to ashish001singh.com</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 Ashish Singh. Built from scratch, no framework.
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

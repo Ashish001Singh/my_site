@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The bug your linter can't see — Ashish Singh</title>
+<meta name="description" content="Why single-file linters miss injection bugs that live in the seam between an LWC and the Apex controller it calls — and how ApexDebugger traces across the boundary." />
+<link rel="canonical" href="https://ashish001singh.com/writing/cross-file-reasoning.html" />
+<meta name="theme-color" content="#0a0a0f" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+<link rel="stylesheet" href="../styles.css" />
+
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ashish001singh.com/writing/cross-file-reasoning.html" />
+<meta property="og:title" content="The bug your linter can't see" />
+<meta property="og:description" content="Why single-file linters miss injection bugs that live in the seam between an LWC and the Apex controller it calls." />
+<meta property="og:image" content="https://ashish001singh.com/assets/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">AS</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#writing">Writing</a></li>
+      <li><a href="../index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <section class="writing-post">
+    <div class="container reveal">
+      <p class="eyebrow">Writing · From building ApexDebugger</p>
+      <h1 class="section-title">The bug your linter can't see: the seam between LWC and Apex</h1>
+      <p class="post-meta">Ashish Singh</p>
+
+      <div class="post-body">
+        <p>
+          Almost every Salesforce linter — and almost every code reviewer, human or AI —
+          reviews one file at a time. That's fine for most bugs. It's not fine for a
+          specific, dangerous class of bug that only exists <em>between</em> two files:
+          untrusted input entering a Lightning Web Component, flowing across the wire
+          into an Apex controller, and landing in a dynamic SOQL or DML statement with no
+          sanitization in between. Read either file alone and it looks fine. The LWC just
+          collects a string. The Apex method just runs a query. The vulnerability lives
+          in the call between them — the seam — which is exactly the part no single-file
+          tool ever looks at.
+        </p>
+        <p>
+          This was the problem I built the cross-language layer in ApexDebugger to solve.
+        </p>
+
+        <h2>Routing the review, then reasoning across it</h2>
+        <p>
+          A multi-agent orchestrator routes each changed file to the reviewer that
+          understands its language — Apex to the Apex reviewer, LWC to the LWC reviewer —
+          then runs two additional passes that look <em>across</em> those results instead
+          of within a single file:
+        </p>
+        <ul>
+          <li>
+            <strong><code>correlate</code> — deterministic.</strong> If an LWC calls an
+            Apex controller method that lacks CRUD/FLS enforcement or a sharing
+            declaration, that's a security risk at the call site itself. Whether the
+            controller is missing that enforcement is a plain, bounded fact — pure
+            set-membership over findings the deterministic layer already produced. No
+            model call needed; it's just code.
+          </li>
+          <li>
+            <strong><code>cross_reason</code> — LLM data-flow.</strong> This traces
+            untrusted input from the LWC into unsafe dynamic SOQL or DML in the Apex it
+            calls. Whether that's actually exploitable is a judgment call, not a bounded
+            fact — a value bound with a query parameter is safe; the same value
+            concatenated directly into a query string is not. Telling those apart needs
+            reasoning about intent, so this node runs as an LLM call with the same
+            three-way voting used everywhere else in the pipeline.
+          </li>
+        </ul>
+        <p>
+          The same rule that shapes the rest of the system shows up again here:
+          bounded-and-decidable stays deterministic, unbounded judgment goes to the model.
+          The seam doesn't get a different philosophy just because it spans two files.
+        </p>
+
+        <h2>The detail that makes it actually usable: partial diffs</h2>
+        <p>
+          Real pull requests rarely touch both sides of a seam at once. Someone tweaks an
+          LWC and doesn't touch the Apex controller it calls that week — which is exactly
+          the case a naive cross-file tool breaks on, because the controller isn't in the
+          diff. ApexDebugger handles this by resolving the unchanged controller straight
+          out of the repository with the deterministic regex layer, at no LLM cost, so an
+          LWC-only PR still gets the full seam check instead of a silent gap. The seam
+          gets reviewed on every relevant PR, not just the rare ones that happen to touch
+          both files simultaneously.
+        </p>
+
+        <h2>Why this is the differentiator, not a feature</h2>
+        <p>
+          Plenty of tools can regex a single Apex class for a missing
+          <code>WITH SECURITY_ENFORCED</code>. Very few trace a string from a Lightning
+          input field, across the wire, into the query that runs on it — because doing
+          that requires holding two files, two languages, and the call between them in
+          view at once, and deciding which parts of that view are facts and which parts
+          are judgment calls. That's the bug class that actually causes incidents in
+          production Salesforce orgs, and it's the one single-file review — human or
+          automated — is structurally unable to see.
+        </p>
+
+        <p>
+          <a class="project-link" href="https://github.com/Ashish001Singh/ApexDebugger" target="_blank" rel="noopener">View ApexDebugger on GitHub →</a>
+        </p>
+      </div>
+
+      <a class="project-link post-back" href="../index.html#writing">← Back to ashish001singh.com</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 Ashish Singh. Built from scratch, no framework.
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>
