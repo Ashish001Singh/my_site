@@ -296,6 +296,25 @@ h2.section-title {
 .timeline-meta .company { color: var(--accent-1); }
 .timeline-item ul { margin: 0; padding-left: 20px; color: var(--text-muted); }
 .timeline-item li { margin-bottom: 6px; }
+.lead-achievement {
+  margin: 0 0 10px;
+  padding-left: 14px;
+  border-left: 2px solid var(--accent-1);
+  color: var(--text);
+  font-size: 15px;
+}
+.timeline-item details { margin-top: 4px; }
+.timeline-item summary {
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+.timeline-item summary:hover { color: var(--accent-1); }
+.timeline-item details ul { margin-top: 10px; }
 
 /* ===== Projects ===== */
 .project-grid {
@@ -355,10 +374,25 @@ h2.section-title {
 .project-link:hover { text-decoration: underline; }
 
 /* ===== Certifications ===== */
+.cert-tier { margin-bottom: 28px; }
+.cert-tier:last-child { margin-bottom: 0; }
+.cert-tier h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-1);
+  margin: 0 0 14px;
+  font-family: var(--mono);
+}
 .cert-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
+}
+.cert-card-featured {
+  border-image: var(--accent-grad) 1;
+  border-width: 1.5px;
+  font-weight: 600;
 }
 .cert-card {
   background: var(--bg-elev);
