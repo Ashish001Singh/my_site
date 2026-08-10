@@ -274,6 +274,57 @@
             rules it owns, to suppress hallucinations. Deterministic layer currently scores
             17/17 golden cases at 1.00 precision/recall.
           </p>
+
+          <svg class="arch-diagram" viewBox="0 0 780 240" role="img" aria-labelledby="arch-title arch-desc">
+            <title id="arch-title">ApexDebugger hybrid review pipeline</title>
+            <desc id="arch-desc">Apex and LWC input splits into a deterministic rules engine and a LangGraph LLM reasoning layer with three-vote consensus; both merge with the deterministic layer holding final authority, producing a ReviewResult.</desc>
+            <defs>
+              <linearGradient id="archGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="var(--accent-1)" />
+                <stop offset="1" stop-color="var(--accent-2)" />
+              </linearGradient>
+              <marker id="archArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="var(--text-dim)" />
+              </marker>
+            </defs>
+
+            <path d="M120,120 C155,120 155,42 190,42" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#archArrow)" />
+            <path d="M120,120 C155,120 155,198 190,198" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#archArrow)" />
+            <path d="M380,42 C420,42 420,108 458,116" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#archArrow)" />
+            <path d="M380,198 C420,198 420,132 458,124" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#archArrow)" />
+            <path d="M600,120 C630,120 630,120 658,120" fill="none" stroke="var(--text-dim)" stroke-width="1.5" marker-end="url(#archArrow)" />
+
+            <g>
+              <rect x="10" y="95" width="110" height="50" rx="10" fill="var(--bg-elev-2)" stroke="var(--border)" />
+              <text x="65" y="116" text-anchor="middle" fill="var(--text)" font-size="12" font-family="var(--mono)">Apex + LWC</text>
+              <text x="65" y="132" text-anchor="middle" fill="var(--text)" font-size="12" font-family="var(--mono)">diff</text>
+            </g>
+
+            <g>
+              <rect x="190" y="15" width="190" height="55" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.5" />
+              <text x="285" y="37" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">Deterministic rules</text>
+              <text x="285" y="54" text-anchor="middle" fill="var(--text-muted)" font-size="11">regex · free · 100% recall</text>
+            </g>
+
+            <g>
+              <rect x="190" y="171" width="190" height="55" rx="10" fill="var(--bg-elev)" stroke="var(--accent-1)" stroke-width="1.5" />
+              <text x="285" y="193" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">LangGraph reasoning</text>
+              <text x="285" y="210" text-anchor="middle" fill="var(--text-muted)" font-size="11">3× LLM vote · keep ≥2/3</text>
+            </g>
+
+            <g>
+              <rect x="458" y="95" width="142" height="50" rx="10" fill="var(--bg-elev)" stroke="var(--accent-2)" stroke-width="1.5" />
+              <text x="529" y="116" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">Merge</text>
+              <text x="529" y="132" text-anchor="middle" fill="var(--text-muted)" font-size="11">regex has final say</text>
+            </g>
+
+            <g>
+              <rect x="658" y="95" width="112" height="50" rx="10" fill="none" stroke="url(#archGrad)" stroke-width="1.5" />
+              <text x="714" y="116" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">ReviewResult</text>
+              <text x="714" y="132" text-anchor="middle" fill="var(--text-muted)" font-size="10">CLI · API · CI</text>
+            </g>
+          </svg>
+
           <div class="project-tags">
             <span class="tag">AI Code Review</span><span class="tag">LangGraph</span>
             <span class="tag">Apex + LWC</span><span class="tag">Eval-Gated</span>

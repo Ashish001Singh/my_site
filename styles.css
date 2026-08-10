@@ -355,6 +355,7 @@ h2.section-title {
   white-space: nowrap;
 }
 .project-card p { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; flex-grow: 1; }
+.arch-diagram { width: 100%; height: auto; margin: 4px 0 16px; }
 .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
 .project-tags .tag {
   font-size: 11px;
