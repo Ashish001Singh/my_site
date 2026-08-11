@@ -399,16 +399,23 @@ h2.section-title {
 .lightbox-content {
   cursor: default;
   line-height: 0;
+  max-width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .lightbox-content svg {
   display: block;
   width: min(1200px, 90vw);
   height: auto;
-  max-height: 90vh;
   background: var(--bg-elev);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
+}
+@media (max-width: 640px) {
+  .lightbox-overlay { padding: 16px 12px; align-items: flex-start; padding-top: 56px; }
+  .lightbox-content svg { width: 640px; max-width: none; }
 }
 .lightbox-close {
   position: absolute;
