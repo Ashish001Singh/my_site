@@ -48,3 +48,48 @@ const setActive = () => {
 
 window.addEventListener("scroll", setActive, { passive: true });
 setActive();
+
+// Diagram lightbox
+const lightbox = document.createElement("div");
+lightbox.className = "lightbox-overlay";
+lightbox.innerHTML = '<button class="lightbox-close" aria-label="Close">&times;</button><div class="lightbox-content"></div>';
+document.body.appendChild(lightbox);
+
+const lightboxContent = lightbox.querySelector(".lightbox-content");
+const lightboxClose = lightbox.querySelector(".lightbox-close");
+let lastFocused = null;
+
+const openLightbox = (svg) => {
+  lightboxContent.innerHTML = "";
+  lightboxContent.appendChild(svg.cloneNode(true));
+  lastFocused = document.activeElement;
+  lightbox.classList.add("open");
+  document.body.style.overflow = "hidden";
+  lightboxClose.focus();
+};
+
+const closeLightbox = () => {
+  lightbox.classList.remove("open");
+  document.body.style.overflow = "";
+  if (lastFocused) lastFocused.focus();
+};
+
+document.querySelectorAll(".arch-diagram").forEach((svg) => {
+  svg.setAttribute("tabindex", "0");
+  svg.setAttribute("role", "button");
+  svg.addEventListener("click", () => openLightbox(svg));
+  svg.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openLightbox(svg);
+    }
+  });
+});
+
+lightbox.addEventListener("click", (e) => {
+  if (!e.target.closest("svg")) closeLightbox();
+});
+lightboxClose.addEventListener("click", closeLightbox);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+});

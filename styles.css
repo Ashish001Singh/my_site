@@ -371,7 +371,63 @@ h2.section-title {
   flex-shrink: 0;
 }
 .project-card p { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; flex-grow: 1; }
-.arch-diagram { width: 100%; height: auto; margin: 4px 0 16px; }
+.arch-diagram {
+  width: 100%;
+  height: auto;
+  margin: 4px 0 16px;
+  cursor: zoom-in;
+  border-radius: 8px;
+  transition: opacity 0.15s, box-shadow 0.15s;
+}
+.arch-diagram:hover { opacity: 0.85; box-shadow: 0 0 0 1px var(--accent-1); }
+
+/* ===== Lightbox ===== */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgba(6, 6, 10, 0.94);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.lightbox-overlay.open { opacity: 1; pointer-events: auto; }
+.lightbox-content {
+  cursor: default;
+  line-height: 0;
+}
+.lightbox-content svg {
+  display: block;
+  width: min(1200px, 90vw);
+  height: auto;
+  max-height: 90vh;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox-close:hover { border-color: var(--accent-1); color: var(--accent-1); }
 .project-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
 .project-tags .tag {
   font-size: 11px;
